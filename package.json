@@ -9,8 +9,7 @@
     "colorbuild": "npm run build -- --colors",
     "build": "webpack",
     "watch": "webpack --watch",
-    "start": "webpack-dev-server --open",
-    "debug": "node $NODE_DEBUG_OPTION server.js"
+    "start": "webpack-dev-server --open"
   },
   "keywords": [],
   "author": "",

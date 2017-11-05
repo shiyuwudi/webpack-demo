@@ -8,12 +8,14 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 
 module.exports = {
     // for调试only！
-    devtool: 'inline-source-map',
+    // 官方教程是inline-source-map,
+    // source map 是支持webstorm debug的配置
+    devtool: 'source-map',
     // 告诉webpack dev server代码所在的位置
     devServer: {
         contentBase: './dist',
         compress: false,
-        port: 9000
+        // port: 9000
     },
     // 多入口
     entry: {
