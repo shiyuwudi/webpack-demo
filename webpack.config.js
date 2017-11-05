@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 // __dirname: 项目根目录 '/Users/shiyu/Desktop/webpack-demo'
 // path.resolve 拼接路径
@@ -11,6 +12,7 @@ module.exports = {
         print: './src/print.js'
     },
     plugins: [
+        new CleanWebpackPlugin(['dist']),
         new HtmlWebpackPlugin({
             title: '多个output'
         })
