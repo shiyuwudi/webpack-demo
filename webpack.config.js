@@ -20,10 +20,19 @@ module.exports = {
     // 告诉webpack dev server代码所在的位置
     devServer: {
         contentBase: './dist',
+        hot: true, // hmr
+        stats: "errors-only",
         // compress: false, gzip
         // clientLogLevel: "none", // 禁用log
-        hot: true // hmr
         // port: 9000
+        // https: true,
+        // proxy: {
+        //     "/douban": {
+        //         target: "https://api.douban.com",
+        //         secure: false
+        //     }
+        // }
+        // quiet: true, 啥都不打印了。。。。
     },
     plugins: [
         new CleanWebpackPlugin(['dist']),
