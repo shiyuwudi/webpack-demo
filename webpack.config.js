@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
@@ -15,12 +16,14 @@ module.exports = {
     devServer: {
         contentBase: './dist',
         compress: false,
+        clientLogLevel: "none", // 禁用log
+        hot: true, // hmr
         // port: 9000
     },
     // 多入口
     entry: {
         app: './src/index.js',
-        print: './src/print.js'
+        // print: './src/print.js'
     },
     plugins: [
         new ManifestPlugin({
@@ -28,8 +31,10 @@ module.exports = {
         }),
         new CleanWebpackPlugin(['dist']),
         new HtmlWebpackPlugin({
-            title: '多个output'
-        })
+            title: 'HMR'
+        }),
+        new webpack.NamedModulesPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
     ],
     output: {
         filename: '[name].bundle.js',
