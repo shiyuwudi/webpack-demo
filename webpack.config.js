@@ -7,6 +7,14 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 // path.resolve 拼接路径
 
 module.exports = {
+    // for调试only！
+    devtool: 'inline-source-map',
+    // 告诉webpack dev server代码所在的位置
+    devServer: {
+        contentBase: './dist',
+        compress: false,
+        port: 9000
+    },
     // 多入口
     entry: {
         app: './src/index.js',

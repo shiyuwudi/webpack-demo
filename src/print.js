@@ -1,3 +1,3 @@
 export default function printMe() {
-    console.log('print.js调用了我!');
+    console.log('print.js调用了我~~~ !');
 }
