@@ -1,6 +1,7 @@
 const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   entry: {
@@ -11,6 +12,7 @@ module.exports = {
     new HTMLWebpackPlugin({
       title: 'Code Splitting'
     }),
+    new BundleAnalyzerPlugin(),
   ],
   output: {
     filename: '[name].bundle.js',
