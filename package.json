@@ -9,7 +9,8 @@
     "colorbuild": "npm run build -- --colors",
     "build": "webpack --config webpack.prod.js",
     "watch": "webpack --watch",
-    "start": "webpack-dev-server --config webpack.dev.js"
+    "start": "webpack-dev-server --config webpack.dev.js",
+    "split": "webpack --config webpack.split.js"
   },
   "keywords": [],
   "author": "",
