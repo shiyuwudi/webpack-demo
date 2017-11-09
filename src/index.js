@@ -1,3 +1,9 @@
 import _ from 'lodash';
 
-console.log(_.join(['Index', 'module', 'loaded!'], ' '))
+function component() {
+    var element = document.createElement('div');
+    element.innerHTML = _.join(['Hello', 'webpack'], ' ');
+    return element;
+}
+
+document.body.appendChild(component());
