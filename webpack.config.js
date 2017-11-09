@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 // __dirname: 项目根目录 '/Users/shiyu/Desktop/webpack-demo'
 // path.resolve 拼接路径
@@ -39,11 +40,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             title: 'HMR'
         }),
-        new ManifestPlugin({
-            fileName: 'myFest.json'
-        }),
-        new webpack.NamedModulesPlugin(),
-        new webpack.HotModuleReplacementPlugin()
+        new UglifyJSPlugin(),
     ],
     output: {
         filename: '[name].bundle.js',

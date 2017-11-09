@@ -22,6 +22,6 @@ function loadXMLDoc() {
 }
 
 export default function printMe() {
-    console.log('222!');
+    console.log('222333!');
     // loadXMLDoc();
 }
