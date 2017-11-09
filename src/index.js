@@ -1,12 +1,23 @@
-import { cube } from './math.js';
+import "babel-polyfill";
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { AppContainer } from 'react-hot-loader'
+import App from './containers/App.jsx'
 
-function component() {
-    var element = document.createElement('pre');
-    element.innerHTML = [
-        'Hello webpack!',
-        '5 cubed is equal to ' + cube(5)
-    ].join('\n\n');
-    return element;
+const render = Component => {
+    ReactDOM.render(
+    <AppContainer>
+        <Component />
+    </AppContainer>,
+    document.getElementById('root'),
+)
 }
 
-document.body.appendChild(component());
+render(App);
+
+// Webpack Hot Module Replacement API
+if (module.hot) {
+    module.hot.accept('./containers/App.jsx', () => {
+        render(App);
+    });
+}

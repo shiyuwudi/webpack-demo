@@ -10,14 +10,12 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
     // 多入口
-    entry: {
-        app: './src/index.js'
-        // print: './src/print.js'
-    },
-    // for调试only！
-    // 官方教程是inline-source-map,
-    // source map 是支持webstorm debug的配置
-    devtool: 'source-map',
+    entry: [
+        'babel-polyfill',
+        'react-hot-loader/patch',
+        './src/index.js'
+    ],
+    devtool: 'inline-source-map',
     // 告诉webpack dev server代码所在的位置
     devServer: {
         contentBase: './dist',
@@ -38,21 +36,43 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(['dist']),
         new HtmlWebpackPlugin({
-            title: 'HMR'
+            title: 'HMR',
+            template: './src/index.html',
         }),
-        new UglifyJSPlugin(),
+        new webpack.NamedModulesPlugin(),
+        new webpack.HotModuleReplacementPlugin(),
     ],
     output: {
         filename: '[name].bundle.js',
-        path: path.resolve(__dirname, 'dist')
-        // publicPath: path.resolve(__dirname, 'dist/myPath'),
+        path: path.resolve(__dirname, 'dist'),
+        // publicPath: '/',
+    },
+    resolve: {
+        modules: [
+            path.join(__dirname, "src"),
+            "node_modules",
+        ],
+        extensions: [
+            ".js",
+            ".jsx",
+            ".json",
+        ],
     },
     module: {
         rules: [
             {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader']
-            }
+            },
+            {
+                test: /\.jsx?$/,
+                exclude: /node_modules/,
+                loader: 'babel-loader',
+                query: {
+                    presets: [ ["es2015", {"modules": false}], "es2016", "stage-0", "react"],
+                    plugins: ["react-hot-loader/babel"],
+                },
+            },
         ]
     }
 };
