@@ -1,0 +1,253 @@
+Index: webpack.config.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>const path = require('path');\nconst webpack = require('webpack');\nconst HtmlWebpackPlugin = require('html-webpack-plugin');\nconst CleanWebpackPlugin = require('clean-webpack-plugin');\nconst ManifestPlugin = require('webpack-manifest-plugin');\nconst UglifyJSPlugin = require('uglifyjs-webpack-plugin');\n\n// __dirname: 项目根目录 '/Users/shiyu/Desktop/webpack-demo'\n// path.resolve 拼接路径\n\nmodule.exports = {\n    // 多入口\n    entry: {\n        app: './src/index.js'\n        // print: './src/print.js'\n    },\n    // for调试only！\n    // 官方教程是inline-source-map,\n    // source map 是支持webstorm debug的配置\n    devtool: 'source-map',\n    // 告诉webpack dev server代码所在的位置\n    devServer: {\n        contentBase: './dist',\n        hot: true, // hmr\n        stats: \"errors-only\",\n        // compress: false, gzip\n        // clientLogLevel: \"none\", // 禁用log\n        // port: 9000\n        // https: true,\n        // proxy: {\n        //     \"/douban\": {\n        //         target: \"https://api.douban.com\",\n        //         secure: false\n        //     }\n        // }\n        // quiet: true, 啥都不打印了。。。。\n    },\n    plugins: [\n        new CleanWebpackPlugin(['dist']),\n        new HtmlWebpackPlugin({\n            title: 'HMR'\n        }),\n        new UglifyJSPlugin(),\n    ],\n    output: {\n        filename: '[name].bundle.js',\n        path: path.resolve(__dirname, 'dist')\n        // publicPath: path.resolve(__dirname, 'dist/myPath'),\n    },\n    module: {\n        rules: [\n            {\n                test: /\\.css$/,\n                use: ['style-loader', 'css-loader']\n            }\n        ]\n    }\n};
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- webpack.config.js	(revision 7d890777d8d56105e73cbe5465d4e4ca964b3c3c)
++++ webpack.config.js	(revision )
+@@ -10,14 +10,12 @@
+ 
+ module.exports = {
+     // 多入口
+-    entry: {
+-        app: './src/index.js'
+-        // print: './src/print.js'
+-    },
+-    // for调试only！
+-    // 官方教程是inline-source-map,
+-    // source map 是支持webstorm debug的配置
+-    devtool: 'source-map',
++    entry: [
++        'babel-polyfill',
++        'react-hot-loader/patch',
++        './src/index.js'
++    ],
++    devtool: 'inline-source-map',
+     // 告诉webpack dev server代码所在的位置
+     devServer: {
+         contentBase: './dist',
+@@ -38,21 +36,43 @@
+     plugins: [
+         new CleanWebpackPlugin(['dist']),
+         new HtmlWebpackPlugin({
+-            title: 'HMR'
++            title: 'HMR',
++            template: './src/index.html',
+         }),
+-        new UglifyJSPlugin(),
++        new webpack.NamedModulesPlugin(),
++        new webpack.HotModuleReplacementPlugin(),
+     ],
+     output: {
+         filename: '[name].bundle.js',
+-        path: path.resolve(__dirname, 'dist')
+-        // publicPath: path.resolve(__dirname, 'dist/myPath'),
++        path: path.resolve(__dirname, 'dist'),
++        // publicPath: '/',
++    },
++    resolve: {
++        modules: [
++            path.join(__dirname, "src"),
++            "node_modules",
++        ],
++        extensions: [
++            ".js",
++            ".jsx",
++            ".json",
++        ],
+     },
+     module: {
+         rules: [
+             {
+                 test: /\.css$/,
+                 use: ['style-loader', 'css-loader']
+-            }
++            },
++            {
++                test: /\.jsx?$/,
++                exclude: /node_modules/,
++                loader: 'babel-loader',
++                query: {
++                    presets: [ ["es2015", {"modules": false}], "es2016", "stage-0", "react"],
++                    plugins: ["react-hot-loader/babel"],
++                },
++            },
+         ]
+     }
+ };
+\ No newline at end of file
+Index: src/containers/App.jsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/containers/App.jsx	(revision )
++++ src/containers/App.jsx	(revision )
+@@ -0,0 +1,44 @@
++import React from 'react';
++
++class App extends React.Component {
++    constructor(props){
++        super(props);
++        this.state = {
++            value: 1,
++            trueStep: 1,
++            step: 1,
++        }
++    }
++    componentDidMount() {
++        setInterval(() => {
++            this.setState({ value: this.state.value + this.state.trueStep });
++        }, 1000)
++    }
++    render() {
++        return (
++            <div
++                style={{
++                    backgroundColor:'black',
++                    color:'white',
++                }}
++            >
++                <div>计数器：{this.state.value}</div>
++                <div>
++                    间隔{this.state.trueStep}
++                </div>
++                <div>
++                    更换间隔
++                    <input
++                        type="text"
++                        value={this.state.step}
++                        style={{ width: 50 }}
++                        onChange={e => this.setState({ step: parseInt(e.target.value )})}
++                    />
++                    <button onClick={() => this.setState({ trueStep: this.state.step })}>确定</button>
++                </div>
++            </div>
++        );
++    }
++}
++
++export default App;
+\ No newline at end of file
+Index: src/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { cube } from './math.js';\n\nfunction component() {\n    var element = document.createElement('pre');\n    element.innerHTML = [\n        'Hello webpack!',\n        '5 cubed is equal to ' + cube(5)\n    ].join('\\n\\n');\n    return element;\n}\n\ndocument.body.appendChild(component());
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/index.js	(revision 7d890777d8d56105e73cbe5465d4e4ca964b3c3c)
++++ src/index.js	(revision )
+@@ -1,12 +1,23 @@
+-import { cube } from './math.js';
++import "babel-polyfill";
++import React from 'react'
++import ReactDOM from 'react-dom'
++import { AppContainer } from 'react-hot-loader'
++import App from './containers/App.jsx'
+ 
+-function component() {
+-    var element = document.createElement('pre');
+-    element.innerHTML = [
+-        'Hello webpack!',
+-        '5 cubed is equal to ' + cube(5)
+-    ].join('\n\n');
+-    return element;
++const render = Component => {
++    ReactDOM.render(
++    <AppContainer>
++        <Component />
++    </AppContainer>,
++    document.getElementById('root'),
++)
+ }
+ 
+-document.body.appendChild(component());
+\ No newline at end of file
++render(App);
++
++// Webpack Hot Module Replacement API
++if (module.hot) {
++    module.hot.accept('./containers/App.jsx', () => {
++        render(App);
++    });
++}
+\ No newline at end of file
+Index: .babelrc
+===================================================================
+--- .babelrc	(revision 7d890777d8d56105e73cbe5465d4e4ca964b3c3c)
++++ .babelrc	(revision 7d890777d8d56105e73cbe5465d4e4ca964b3c3c)
+@@ -1,3 +0,0 @@
+-{
+-  "plugins": ["react-hot-loader/babel"]
+-}
+\ No newline at end of file
+Index: src/index.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/index.html	(revision )
++++ src/index.html	(revision )
+@@ -0,0 +1,9 @@
++<!DOCTYPE html>
++<html lang="en">
++<head>
++    <meta charset="UTF-8">
++</head>
++<body>
++<div id="root"></div>
++</body>
++</html>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/misc.xml	(revision )
++++ .idea/misc.xml	(revision )
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="JavaScriptSettings">
++    <option name="languageLevel" value="JSX" />
++  </component>
++</project>
+\ No newline at end of file
+Index: package.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\n  \"name\": \"webpack-demo\",\n  \"version\": \"1.0.0\",\n  \"description\": \"test test webpack\",\n  \"repository\": \"to be continue..\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\",\n    \"colorbuild\": \"npm run build -- --colors\",\n    \"build\": \"webpack\",\n    \"watch\": \"webpack --watch\",\n    \"start\": \"webpack-dev-server --hotOnly\"\n  },\n  \"keywords\": [],\n  \"author\": \"\",\n  \"license\": \"ISC\",\n  \"devDependencies\": {\n    \"clean-webpack-plugin\": \"^0.1.17\",\n    \"css-loader\": \"^0.28.7\",\n    \"csv-loader\": \"^2.1.1\",\n    \"file-loader\": \"^1.1.5\",\n    \"html-webpack-plugin\": \"^2.30.1\",\n    \"style-loader\": \"^0.19.0\",\n    \"uglifyjs-webpack-plugin\": \"^1.0.1\",\n    \"url-loader\": \"^0.6.2\",\n    \"webpack\": \"^3.8.1\",\n    \"webpack-dev-server\": \"^2.9.4\",\n    \"webpack-manifest-plugin\": \"^1.3.2\",\n    \"xml-loader\": \"^1.2.1\"\n  },\n  \"dependencies\": {\n    \"es6-promise\": \"^4.1.1\",\n    \"lodash\": \"^4.17.4\",\n    \"react-hot-loader\": \"^3.1.2\"\n  }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- package.json	(revision 7d890777d8d56105e73cbe5465d4e4ca964b3c3c)
++++ package.json	(revision )
+@@ -15,6 +15,12 @@
+   "author": "",
+   "license": "ISC",
+   "devDependencies": {
++    "babel-core": "^6.26.0",
++    "babel-loader": "^7.1.2",
++    "babel-preset-es2015": "^6.24.1",
++    "babel-preset-es2016": "^6.24.1",
++    "babel-preset-react": "^6.24.1",
++    "babel-preset-stage-0": "^6.24.1",
+     "clean-webpack-plugin": "^0.1.17",
+     "css-loader": "^0.28.7",
+     "csv-loader": "^2.1.1",
+@@ -29,8 +35,11 @@
+     "xml-loader": "^1.2.1"
+   },
+   "dependencies": {
++    "babel-polyfill": "^6.26.0",
+     "es6-promise": "^4.1.1",
+     "lodash": "^4.17.4",
++    "react": "^16.0.0",
++    "react-dom": "^16.0.0",
+     "react-hot-loader": "^3.1.2"
+   }
+ }
